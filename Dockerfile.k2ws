@@ -1,25 +1,26 @@
-FROM golang:1.10-alpine
+FROM golang:1.17-alpine
+LABEL org.opencontainers.image.source = &quot;https://github.com/renehonig/kafka2websocket&quot;
 
-RUN apk add --update --no-cache alpine-sdk bash python
+RUN apk add --update --no-cache alpine-sdk bash python3 musl-dev
 
 # compile and install librdkafka
 WORKDIR /root
 RUN git clone https://github.com/edenhill/librdkafka.git
 WORKDIR /root/librdkafka
-# checkout v1.1.0
-RUN git checkout 6160ec2
+# checkout v1.8.0
+RUN git checkout 9ded5ee
 RUN /root/librdkafka/configure
 RUN make
 RUN make install
 
 # copy source files and private repo dep
 COPY ./k2ws/ /go/src/k2ws/
-COPY ./vendor/ /go/src/k2ws/vendor/
 
 # static build the app
 WORKDIR /go/src/k2ws
+RUN go mod tidy
 RUN go get -d ./...
-RUN go build -tags=static
+RUN go build -tags musl -ldflags '-extldflags "-static"' 
 
 # create final image
 FROM alpine

@@ -1,19 +1,20 @@
-FROM golang:1.10-stretch
+FROM golang:1.17-buster
 
-# compile & install librdkafka (1.1.0)
+# compile & install librdkafka (1.8.0)
 RUN cd /tmp && \
     git clone https://github.com/edenhill/librdkafka.git && \
     cd /tmp/librdkafka && \
-    git checkout 6160ec2 && \
+    git checkout 9ded5ee && \
     ./configure && \
     make && \
     make install
 
 COPY ./k2ws/ /go/src/k2ws/
-COPY ./vendor/ /go/src/k2ws/vendor/
+
 
 RUN cd /go/src/k2ws/ && \
-    go get ./... && \
+    go mod tidy && \
+    go get -d ./... && \
     go build -tags static && \
     cp k2ws /usr/bin/k2ws
 
