@@ -115,7 +115,7 @@ You'll end up with `./build/k2ws` executable that works on Linux.
 ### Build and run with Docker
 **Build**
 ```sh
-docker build -f Dockerfile.k2ws -t k2ws .
+docker build -f Dockerfile -t k2ws .
 ```
 
 **Run**
