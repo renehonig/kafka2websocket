@@ -7,8 +7,8 @@ RUN apk add --update --no-cache alpine-sdk bash python3 musl-dev
 WORKDIR /root
 RUN git clone https://github.com/edenhill/librdkafka.git
 WORKDIR /root/librdkafka
-# checkout v1.8.0
-RUN git checkout 9ded5ee
+# checkout v1.8.2post2
+RUN git checkout f80cc8f
 RUN /root/librdkafka/configure
 RUN make
 RUN make install
